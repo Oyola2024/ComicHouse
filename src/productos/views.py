@@ -21,6 +21,8 @@ from .serializers import (
     PedidoSerializer,
     DetallePedidoSerializer,
     ResenaSerializer,
+    ResenaListSerializer,
+    ComicAuthorSerializer,
 )
 # Create your views here.
 def home(request):
@@ -67,21 +69,25 @@ class ComicViewSet(viewsets.ModelViewSet):
 
     search_fields = ['titulo', 'autor__nombre', 'editorial__nombre', 'genero__nombre']
 
+    # En el list (GET /api/comics/) se muestran autor, editorial y género completos.
+    # En el resto de las acciones (crear, editar, detalle) se usan solo los IDs.
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ComicAuthorSerializer
+        return ComicSerializer
+
+    # detail=False -> aplica a toda la colección: GET /api/comics/sin_stock/
     @extend_schema(
         summary="Listar cómics sin stock",
-        description="Devuelve una lista de cómics que no tienen stock disponible.",
-        responses={
-            200: ComicSerializer,
-            400: OpenApiResponse(description="Solicitud inválida"),
-        }
+        description="Devuelve los cómics cuyo stock es 0.",
+        responses=ComicSerializer(many=True),
     )
-
-    @action(detail=True, methods=['get'])
-    def sin_stock(self, request, pk=None):
-        comic = self.get.queryset().filter(stock=0)
-        serializer = self.get_serializer(comic, many=True)
+    @action(detail=False, methods=['get'])
+    def sin_stock(self, request):
+        comics = self.get_queryset().filter(stock=0)
+        serializer = self.get_serializer(comics, many=True)
         return Response(serializer.data)
-        
+
 class PortadaViewSet(viewsets.ModelViewSet):
     queryset = Portada.objects.all().select_related('comic').order_by('comic__titulo')
     serializer_class = PortadaSerializer
@@ -107,16 +113,16 @@ class PedidoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
 
+    # detail=True -> aplica a un pedido puntual: POST /api/pedidos/{id}/cancelar/
     @extend_schema(
         summary="Cancelar un pedido",
-        description="Permite cancelar un pedido existente.",
+        description="Cambia el estado del pedido a 'cancelado'. No necesita body.",
+        request=None,
         responses={
             200: PedidoSerializer,
-            400: OpenApiResponse(description="Solicitud inválida"),
             404: OpenApiResponse(description="Pedido no encontrado"),
         }
     )
-
     @action(detail=True, methods=['post'])
     def cancelar(self, request, pk=None):
         pedido = self.get_object()
@@ -131,6 +137,12 @@ class DetallePedidoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 class ResenaViewSet(viewsets.ModelViewSet):
-    queryset = Resena.objects.all().select_related('comic', 'cliente')
+    queryset = Resena.objects.all().select_related('comic', 'cliente').order_by('-fecha_resena')
     serializer_class = ResenaSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    # Datos anidados (comic y cliente completos) solo en el list
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ResenaListSerializer
+        return ResenaSerializer

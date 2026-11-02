@@ -137,9 +137,10 @@ class PedidoSerializer(serializers.ModelSerializer):
             'cliente',
             'fecha_pedido',
             'total',
+            'estado',
         ]
 
-        read_only_fields = ['id']
+        read_only_fields = ['id', 'fecha_pedido']
 
 
 class DetallePedidoSerializer(serializers.ModelSerializer):
@@ -168,3 +169,20 @@ class ResenaSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 
+
+
+class ResenaListSerializer(serializers.ModelSerializer):
+    comic = ComicSerializer(read_only=True)
+    cliente = ClienteSerializer(read_only=True)
+
+    class Meta:
+        model = Resena
+        fields = [
+            'id',
+            'comic',
+            'cliente',
+            'calificacion',
+            'comentario',
+            'fecha_resena',
+        ]
+        read_only_fields = ['id', 'fecha_resena']

@@ -72,6 +72,7 @@ class Pedido(models.Model):
         ('procesando', 'Procesando'),
         ('enviado', 'Enviado'),
         ('entregado', 'Entregado'),
+        ('cancelado', 'Cancelado'),
     ]
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     comics = models.ManyToManyField(Comic, through='DetallePedido')
