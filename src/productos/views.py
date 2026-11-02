@@ -24,7 +24,8 @@ from .serializers import (
     ResenaListSerializer,
     ComicAuthorSerializer,
 )
-# Create your views here.
+
+
 def home(request):
     return render(request, 'home.html')
 
@@ -69,14 +70,11 @@ class ComicViewSet(viewsets.ModelViewSet):
 
     search_fields = ['titulo', 'autor__nombre', 'editorial__nombre', 'genero__nombre']
 
-    # En el list (GET /api/comics/) se muestran autor, editorial y género completos.
-    # En el resto de las acciones (crear, editar, detalle) se usan solo los IDs.
     def get_serializer_class(self):
         if self.action == 'list':
             return ComicAuthorSerializer
         return ComicSerializer
 
-    # detail=False -> aplica a toda la colección: GET /api/comics/sin_stock/
     @extend_schema(
         summary="Listar cómics sin stock",
         description="Devuelve los cómics cuyo stock es 0.",
@@ -113,7 +111,6 @@ class PedidoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
 
-    # detail=True -> aplica a un pedido puntual: POST /api/pedidos/{id}/cancelar/
     @extend_schema(
         summary="Cancelar un pedido",
         description="Cambia el estado del pedido a 'cancelado'. No necesita body.",
