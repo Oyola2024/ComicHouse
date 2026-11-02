@@ -1,5 +1,6 @@
 from rest_framework.routers import DefaultRouter
 from productos.views import (
+    RegistroViewSet,
     EditorialViewSet,
     AutorViewSet,
     GeneroViewSet,
@@ -23,4 +24,4 @@ router.register(r'listas-deseos', ListaDeseosViewSet)
 router.register(r'pedidos', PedidoViewSet)
 router.register(r'detalles-pedido', DetallePedidoViewSet)
 router.register(r'resenas', ResenaViewSet)
-
+router.register(r'registro', RegistroViewSet, basename='registro')

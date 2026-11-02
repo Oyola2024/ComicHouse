@@ -4,9 +4,13 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter 
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 
+
 from .serializers import (
+    RegistroSerializer,
     ComicSerializer,
     AutorSerializer,
     EditorialSerializer,
@@ -19,27 +23,49 @@ from .serializers import (
     ResenaSerializer,
 )
 # Create your views here.
+def home(request):
+    return render(request, 'home.html')
 
+class RegistroViewSet(viewsets.ModelViewSet):
+    queryset = Cliente.objects.none()
+    serializer_class = RegistroSerializer
 
 class EditorialViewSet(viewsets.ModelViewSet):
     queryset = Editorial.objects.all().order_by('nombre')
     serializer_class = EditorialSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['nombre', 'direccion', 'telefono']
 
 class AutorViewSet(viewsets.ModelViewSet):
     queryset = Autor.objects.all().order_by('nombre')
     serializer_class = AutorSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['nombre', 'apellido']
 
 class GeneroViewSet(viewsets.ModelViewSet):
     queryset = Genero.objects.all().order_by('nombre')
     serializer_class = GeneroSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['nombre']
 
 class ComicViewSet(viewsets.ModelViewSet):
     queryset = Comic.objects.all().select_related('autor', 'editorial', 'genero').order_by('titulo')
     serializer_class = ComicSerializer
-    #permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_fields = {
+        'titulo': ['icontains'],
+        'autor__nombre': ['icontains'],
+        'editorial__nombre': ['icontains'],
+        'genero__nombre': ['icontains'],
+        'precio': ['exact','gt','lt','gte', 'lte'],
+        'stock': ['exact','gt','lt','gte', 'lte'],
+    }
+
+    search_fields = ['titulo', 'autor__nombre', 'editorial__nombre', 'genero__nombre']
 
     @extend_schema(
         summary="Listar cómics sin stock",
@@ -59,22 +85,27 @@ class ComicViewSet(viewsets.ModelViewSet):
 class PortadaViewSet(viewsets.ModelViewSet):
     queryset = Portada.objects.all().select_related('comic').order_by('comic__titulo')
     serializer_class = PortadaSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['comic__titulo']
 
 class ClienteViewSet(viewsets.ModelViewSet):
     queryset = Cliente.objects.all().order_by('nombre')
     serializer_class = ClienteSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['nombre', 'apellido', 'email', 'telefono']
 
 class ListaDeseosViewSet(viewsets.ModelViewSet):
     queryset = ListaDeseos.objects.all().select_related('cliente').prefetch_related('comics').order_by('cliente__nombre')
     serializer_class = ListaDeseosSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
 class PedidoViewSet(viewsets.ModelViewSet):
     queryset = Pedido.objects.all()
     serializer_class = PedidoSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
 
     @extend_schema(
         summary="Cancelar un pedido",
@@ -97,10 +128,9 @@ class PedidoViewSet(viewsets.ModelViewSet):
 class DetallePedidoViewSet(viewsets.ModelViewSet):
     queryset = DetallePedido.objects.all().select_related('pedido', 'comic')
     serializer_class = DetallePedidoSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 class ResenaViewSet(viewsets.ModelViewSet):
     queryset = Resena.objects.all().select_related('comic', 'cliente')
     serializer_class = ResenaSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly]
-
+    permission_classes = [IsAuthenticatedOrReadOnly]

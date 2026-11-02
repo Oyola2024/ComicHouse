@@ -1,5 +1,23 @@
 from rest_framework import serializers
 from .models import  Editorial, Genero, Autor, Comic, Portada, Cliente, ListaDeseos, Pedido, DetallePedido , Resena
+from django.contrib.auth.models import User
+
+# serializers.py
+class RegistroSerializer(serializers.Serializer):
+    username = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True, min_length=8)
+    nombre = serializers.CharField()
+    apellido = serializers.CharField()
+    email = serializers.EmailField()
+
+    def create(self, data):
+        user = User.objects.create_user(
+            username=data['username'], password=data['password'], email=data['email']
+        )
+        return Cliente.objects.create(
+            user=user, nombre=data['nombre'], apellido=data['apellido'], email=data['email']
+        )
+
 
 class EditorialSerializer(serializers.ModelSerializer):
     class Meta:

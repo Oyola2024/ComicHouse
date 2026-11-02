@@ -57,7 +57,7 @@ ROOT_URLCONF = 'settings.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,13 +77,14 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'ComicHouse API',
     'DESCRIPTION': 'API para la gestión de cómics',
-    'VERSION': '1.0.0',
+    'VERSION': '2.0',
 }
 
 SIMPLE_JWT = {

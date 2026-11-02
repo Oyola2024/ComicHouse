@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComicHouse</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; }
+        header { background: #b71c1c; color: white; text-align: center; padding: 40px 20px; }
+        main { max-width: 700px; margin: 30px auto; padding: 0 20px; }
+        .card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 15px; }
+        a { color: #b71c1c; font-weight: bold; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        ul { padding-left: 20px; line-height: 1.8; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📚 ComicHouse</h1>
+        <p>Bienvenido a la API de nuestra librería de comics</p>
+    </header>
+    <main>
+        <div class="card">
+            <h2>¿Qué es esto?</h2>
+            <p>Backend en Django REST Framework para gestionar comics, autores, editoriales, clientes y pedidos.</p>
+        </div>
+        <div class="card">
+            <h2>Enlaces útiles</h2>
+            <ul>
+                <li><a href="{% url 'api-root' %}">API navegable</a></li>
+                <li><a href="{% url 'swagger-ui' %}">Documentación Swagger</a></li>
+                <li><a href="{% url 'redoc' %}">Documentación Redoc</a></li>
+                <li><a href="{% url 'admin:index' %}">Panel de administración</a></li>
+            </ul>
+        </div>
+    </main>
+</body>
+</html>

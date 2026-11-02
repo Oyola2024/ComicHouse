@@ -1,6 +1,8 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
+
+
 class Editorial(models.Model):
     nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=200)
@@ -30,7 +32,7 @@ class Comic(models.Model):
     editorial = models.ForeignKey(Editorial, on_delete=models.CASCADE)
     genero = models.ForeignKey(Genero, on_delete=models.CASCADE)
     fecha_publicacion = models.DateField()
-    precio = models.IntegerField()
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField()
 
 
@@ -47,6 +49,7 @@ class Portada(models.Model):
 
 
 class Cliente(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cliente', null=True, blank=True)
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
