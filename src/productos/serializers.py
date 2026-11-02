@@ -36,6 +36,8 @@ class AutorSerializer(serializers.ModelSerializer):
 
         read_only_fields = ['id']
 
+    
+
 class ComicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comic
@@ -51,6 +53,27 @@ class ComicSerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = ['id']
+
+class ComicAuthorSerializer(serializers.ModelSerializer):
+    autor = AutorSerializer(read_only=True)
+    editorial = EditorialSerializer(read_only=True)
+    genero = GeneroSerializer(read_only=True)
+
+    class Meta:
+        model = Comic
+        fields = [
+            'id',
+            'titulo',
+            'autor',
+            'editorial',
+            'genero',
+            'fecha_publicacion',
+            'precio',
+            'stock',
+        ]
+
+        read_only_fields = ['id']
+
 
 class PortadaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -94,7 +117,7 @@ class PedidoSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'cliente',
-            'fecha',
+            'fecha_pedido',
             'total',
         ]
 
