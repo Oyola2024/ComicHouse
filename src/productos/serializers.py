@@ -134,8 +134,7 @@ class DetallePedidoSerializer(serializers.ModelSerializer):
             'cantidad',
             'precio_unitario',
         ]
-
-        read_only_fields = ['id', "comic"]
+        read_only_fields = ['id']
 
 class ResenaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -148,6 +147,6 @@ class ResenaSerializer(serializers.ModelSerializer):
             'comentario',
         ]
 
-        read_only_fields = ['id','cliente', 'comic']
+        read_only_fields = ['id']
 
 

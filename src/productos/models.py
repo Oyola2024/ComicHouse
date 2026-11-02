@@ -33,6 +33,7 @@ class Comic(models.Model):
     precio = models.IntegerField()
     stock = models.IntegerField()
 
+
     def __str__(self):
         return self.titulo
 
