@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter 
+from rest_framework.filters import SearchFilter, OrderingFilter
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 
 
@@ -58,7 +58,9 @@ class ComicViewSet(viewsets.ModelViewSet):
     queryset = Comic.objects.all().select_related('autor', 'editorial', 'genero').order_by('titulo')
     serializer_class = ComicSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    ordering_fields = ['titulo','precio','stock']
+    
     filterset_fields = {
         'titulo': ['icontains'],
         'autor__nombre': ['icontains'],
@@ -71,7 +73,7 @@ class ComicViewSet(viewsets.ModelViewSet):
     search_fields = ['titulo', 'autor__nombre', 'editorial__nombre', 'genero__nombre']
 
     def get_serializer_class(self):
-        if self.action == 'list':
+        if self.action in ('list','retrieve'):
             return ComicAuthorSerializer
         return ComicSerializer
 
