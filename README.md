@@ -44,36 +44,40 @@ Este proyecto es **solo el backend** (la parte que guarda y entrega los datos). 
 
 ## 🛠 Tecnologías
 
-| Herramienta | Para qué se usa |
-|---|---|
-| **Python 3.13** | Lenguaje del proyecto |
-| **Django 6.1** | Framework web: base de datos, panel de administración, vistas |
+
+| Herramienta               | Para qué se usa                                                      |
+| ------------------------- | --------------------------------------------------------------------- |
+| **Python 3.13**           | Lenguaje del proyecto                                                 |
+| **Django 6.1**            | Framework web: base de datos, panel de administración, vistas        |
 | **Django REST Framework** | Convierte los modelos en una API (serializers, viewsets, paginación) |
-| **SimpleJWT** | Login con tokens (JWT) |
-| **django-filter** | Filtros en los listados (`?precio__lte=5000`) |
-| **drf-spectacular** | Documentación automática (Swagger y Redoc) |
-| **django-cors-headers** | Permite que un frontend se conecte a la API |
-| **Pillow** | Manejo de imágenes (portadas de los comics) |
-| **SQLite** | Base de datos (un archivo, no hay que instalar nada) |
-| **uv** | Gestor de entorno virtual y dependencias |
+| **SimpleJWT**             | Login con tokens (JWT)                                                |
+| **django-filter**         | Filtros en los listados (`?precio__lte=5000`)                         |
+| **drf-spectacular**       | Documentación automática (Swagger y Redoc)                          |
+| **django-cors-headers**   | Permite que un frontend se conecte a la API                           |
+| **Pillow**                | Manejo de imágenes (portadas de los comics)                          |
+| **SQLite**                | Base de datos (un archivo, no hay que instalar nada)                  |
+| **uv**                    | Gestor de entorno virtual y dependencias                              |
 
 ---
 
 ## 📸 Capturas
 
-> Reemplazá cada imagen por tu captura (guardalas en `docs/screenshots/`).
 
-| Página de bienvenida | API navegable |
-|---|---|
-| ![Home](docs/screenshots/01-home.png) | ![API](docs/screenshots/02-api-root.png) |
 
-| Swagger | Redoc |
-|---|---|
-| ![Swagger](docs/screenshots/03-swagger.png) | ![Redoc](docs/screenshots/04-redoc.png) |
+| Página de bienvenida              | API navegable                              |
+| ---------------------------------- | ------------------------------------------ |
+| ![Home](docs/screenshots/home.png) | ![API](docs/screenshots/apiNavegable
+.png) |
 
-| Panel de administración | Filtros en la API |
-|---|---|
-| ![Admin](docs/screenshots/05-admin.png) | ![Filtros](docs/screenshots/06-filtros.png) |
+
+| Swagger                                  |  |
+| ---------------------------------------- | - |
+| ![Swagger](docs/screenshots/swagger.png) |  |
+
+
+| Panel de administración                  | Filtros en la API                          |
+| ----------------------------------------- | ------------------------------------------ |
+| ![Admin](docs/screenshots/panelAdmin.png) | ![Filtros](docs/screenshots/filterApi.png) |
 
 ---
 
@@ -169,18 +173,19 @@ erDiagram
 
 ### ¿Qué significa cada modelo?
 
-| Modelo | Qué representa | Se relaciona con |
-|---|---|---|
-| **Editorial** | La empresa que publica el comic (Marvel, DC...) | Tiene muchos `Comic` |
-| **Genero** | Categoría del comic (superhéroes, terror...) | Tiene muchos `Comic` |
-| **Autor** | Quien escribió el comic | Tiene muchos `Comic` |
-| **Comic** | El producto que se vende | Pertenece a un `Autor`, una `Editorial` y un `Genero` |
-| **Portada** | Imagen de tapa de un comic | Pertenece a un `Comic` |
-| **Cliente** | Persona que compra | Está unido a un `User` (su cuenta de login) |
-| **ListaDeseos** | Comics que un cliente quiere comprar más adelante | Pertenece a un `Cliente` y tiene muchos `Comic` |
-| **Pedido** | Una compra completa | Pertenece a un `Cliente` |
-| **DetallePedido** | Una línea del pedido ("2 unidades de Batman") | Une un `Pedido` con un `Comic` |
-| **Resena** | Opinión y puntaje de un cliente sobre un comic | Une un `Cliente` con un `Comic` |
+
+| Modelo            | Qué representa                                    | Se relaciona con                                     |
+| ----------------- | -------------------------------------------------- | ---------------------------------------------------- |
+| **Editorial**     | La empresa que publica el comic (Marvel, DC...)    | Tiene muchos`Comic`                                  |
+| **Genero**        | Categoría del comic (superhéroes, terror...)     | Tiene muchos`Comic`                                  |
+| **Autor**         | Quien escribió el comic                           | Tiene muchos`Comic`                                  |
+| **Comic**         | El producto que se vende                           | Pertenece a un`Autor`, una `Editorial` y un `Genero` |
+| **Portada**       | Imagen de tapa de un comic                         | Pertenece a un`Comic`                                |
+| **Cliente**       | Persona que compra                                 | Está unido a un`User` (su cuenta de login)          |
+| **ListaDeseos**   | Comics que un cliente quiere comprar más adelante | Pertenece a un`Cliente` y tiene muchos `Comic`       |
+| **Pedido**        | Una compra completa                                | Pertenece a un`Cliente`                              |
+| **DetallePedido** | Una línea del pedido ("2 unidades de Batman")     | Une un`Pedido` con un `Comic`                        |
+| **Resena**        | Opinión y puntaje de un cliente sobre un comic    | Une un`Cliente` con un `Comic`                       |
 
 ### Los tres tipos de relaciones usados
 
@@ -205,46 +210,54 @@ erDiagram
 ### Pasos
 
 **1. Clonar el repositorio**
+
 ```bash
 git clone <URL-DEL-REPOSITORIO>
 cd comicHouse
 ```
 
 **2. Instalar las dependencias** (uv crea el entorno virtual solo)
+
 ```bash
 uv sync
 ```
 
 **3. Entrar a la carpeta del código**
+
 ```bash
 cd src
 ```
 
 **4. Crear la base de datos** (aplica las migraciones)
+
 ```bash
 uv run manage.py migrate
 ```
 
 **5. Crear un superusuario** (para entrar al panel de administración)
+
 ```bash
 uv run manage.py createsuperuser
 ```
+
 Te pide usuario, email y contraseña. Al escribir la contraseña no se ve nada en pantalla, es normal.
 
 **6. Levantar el servidor**
+
 ```bash
 uv run manage.py runserver
 ```
 
 Listo. Abrí **http://127.0.0.1:8000/** en el navegador.
 
-| Qué | Dirección |
-|---|---|
-| Bienvenida | http://127.0.0.1:8000/ |
-| API navegable | http://127.0.0.1:8000/api/ |
-| Swagger | http://127.0.0.1:8000/api/docs/swagger/ |
-| Redoc | http://127.0.0.1:8000/api/docs/redoc/ |
-| Administración | http://127.0.0.1:8000/admin/ |
+
+| Qué            | Dirección                              |
+| --------------- | --------------------------------------- |
+| Bienvenida      | http://127.0.0.1:8000/                  |
+| API navegable   | http://127.0.0.1:8000/api/              |
+| Swagger         | http://127.0.0.1:8000/api/docs/swagger/ |
+| Redoc           | http://127.0.0.1:8000/api/docs/redoc/   |
+| Administración | http://127.0.0.1:8000/admin/            |
 
 > La base está vacía al principio. Cargá editoriales, autores, géneros y comics desde el panel de administración.
 
@@ -257,14 +270,17 @@ Listo. Abrí **http://127.0.0.1:8000/** en el navegador.
 Casi todos los endpoints piden estar identificado. Hay tres formas:
 
 **1) Registrarse** (no necesita login)
+
 ```bash
 curl -X POST http://127.0.0.1:8000/api/registro/ \
   -H "Content-Type: application/json" \
   -d '{"username":"ana","password":"unaClave123","nombre":"Ana","apellido":"Pérez","email":"ana@mail.com"}'
 ```
+
 Crea el usuario y su `Cliente` a la vez.
 
 **2) Token JWT** (para frontend, Postman, etc.)
+
 ```bash
 # Pedir el token
 curl -X POST http://127.0.0.1:8000/api/token/ \
@@ -276,6 +292,7 @@ curl -X POST http://127.0.0.1:8000/api/token/ \
 curl http://127.0.0.1:8000/api/clientes/ \
   -H "Authorization: Bearer <access>"
 ```
+
 El token `access` dura 5 minutos. Cuando vence, se renueva con `POST /api/token/refresh/` mandando el `refresh`.
 
 **3) Sesión** — si iniciaste sesión en `/admin/`, el navegador ya queda identificado y la API navegable funciona directamente.
@@ -284,20 +301,22 @@ El token `access` dura 5 minutos. Cuando vence, se renueva con `POST /api/token/
 
 ### Quién puede qué
 
-| Recurso | Sin login | Con login |
-|---|---|---|
-| Comics, géneros, detalles de pedido, reseñas | Solo leer | Leer, crear, editar, borrar |
-| Editoriales, autores, portadas, clientes, listas de deseos, pedidos | ❌ | Leer, crear, editar, borrar |
-| Registro | Crear cuenta | Crear cuenta |
+
+| Recurso                                                             | Sin login    | Con login                   |
+| ------------------------------------------------------------------- | ------------ | --------------------------- |
+| Comics, géneros, detalles de pedido, reseñas                      | Solo leer    | Leer, crear, editar, borrar |
+| Editoriales, autores, portadas, clientes, listas de deseos, pedidos | ❌           | Leer, crear, editar, borrar |
+| Registro                                                            | Crear cuenta | Crear cuenta                |
 
 ### Acciones personalizadas (`@action`)
 
 Además del CRUD normal hay dos endpoints especiales:
 
-| Método | URL | Qué hace |
-|---|---|---|
-| `GET` | `/api/comics/sin_stock/` | Lista los comics sin stock |
-| `POST` | `/api/pedidos/{id}/cancelar/` | Cancela un pedido |
+
+| Método | URL                           | Qué hace                  |
+| ------- | ----------------------------- | -------------------------- |
+| `GET`   | `/api/comics/sin_stock/`      | Lista los comics sin stock |
+| `POST`  | `/api/pedidos/{id}/cancelar/` | Cancela un pedido          |
 
 ---
 
@@ -305,21 +324,22 @@ Además del CRUD normal hay dos endpoints especiales:
 
 Todos cuelgan de `/api/`. Cada recurso permite: `GET` (listar), `POST` (crear), `GET /{id}/` (ver uno), `PUT/PATCH /{id}/` (editar) y `DELETE /{id}/` (borrar).
 
-| Recurso | URL |
-|---|---|
-| Editoriales | `/api/editoriales/` |
-| Autores | `/api/autores/` |
-| Géneros | `/api/generos/` |
-| Comics | `/api/comics/` |
-| Portadas | `/api/portadas/` |
-| Clientes | `/api/clientes/` |
-| Listas de deseos | `/api/listas-deseos/` |
-| Pedidos | `/api/pedidos/` |
-| Detalles de pedido | `/api/detalles-pedido/` |
-| Reseñas | `/api/resenas/` |
-| Registro | `/api/registro/` (solo `POST`) |
-| Token | `/api/token/` y `/api/token/refresh/` |
-| Esquema OpenAPI | `/api/schema/` |
+
+| Recurso            | URL                                   |
+| ------------------ | ------------------------------------- |
+| Editoriales        | `/api/editoriales/`                   |
+| Autores            | `/api/autores/`                       |
+| Géneros           | `/api/generos/`                       |
+| Comics             | `/api/comics/`                        |
+| Portadas           | `/api/portadas/`                      |
+| Clientes           | `/api/clientes/`                      |
+| Listas de deseos   | `/api/listas-deseos/`                 |
+| Pedidos            | `/api/pedidos/`                       |
+| Detalles de pedido | `/api/detalles-pedido/`               |
+| Reseñas           | `/api/resenas/`                       |
+| Registro           | `/api/registro/` (solo `POST`)        |
+| Token              | `/api/token/` y `/api/token/refresh/` |
+| Esquema OpenAPI    | `/api/schema/`                        |
 
 ---
 
@@ -340,16 +360,17 @@ Los listados devuelven **10 resultados por página**. Para cambiar de página: `
 
 ### Filtros y búsqueda en comics
 
-| Qué querés | Ejemplo |
-|---|---|
-| Título que contenga "bat" | `/api/comics/?titulo__icontains=bat` |
-| Por autor | `/api/comics/?autor__nombre__icontains=frank` |
-| Por editorial | `/api/comics/?editorial__nombre__icontains=dc` |
-| Por género | `/api/comics/?genero__nombre__icontains=terror` |
-| Precio menor o igual a 5000 | `/api/comics/?precio__lte=5000` |
-| Precio mayor a 3000 | `/api/comics/?precio__gt=3000` |
-| Con stock mayor a 0 | `/api/comics/?stock__gt=0` |
-| Buscar en título, autor, editorial y género a la vez | `/api/comics/?search=batman` |
+
+| Qué querés                                           | Ejemplo                                         |
+| ------------------------------------------------------ | ----------------------------------------------- |
+| Título que contenga "bat"                             | `/api/comics/?titulo__icontains=bat`            |
+| Por autor                                              | `/api/comics/?autor__nombre__icontains=frank`   |
+| Por editorial                                          | `/api/comics/?editorial__nombre__icontains=dc`  |
+| Por género                                            | `/api/comics/?genero__nombre__icontains=terror` |
+| Precio menor o igual a 5000                            | `/api/comics/?precio__lte=5000`                 |
+| Precio mayor a 3000                                    | `/api/comics/?precio__gt=3000`                  |
+| Con stock mayor a 0                                    | `/api/comics/?stock__gt=0`                      |
+| Buscar en título, autor, editorial y género a la vez | `/api/comics/?search=batman`                    |
 
 Se pueden combinar: `/api/comics/?genero__nombre__icontains=terror&precio__lte=5000`.
 
@@ -408,6 +429,6 @@ Pedido del frontend → urls.py → routers.py → ViewSet (views.py) → Serial
 
 ## 👥 Integrantes
 
-- Nombre Apellido
-- Nombre Apellido
-- Nombre Apellido
+- Facundo Oyola
+- Francisco Elisondo
+- Mateo Torres
